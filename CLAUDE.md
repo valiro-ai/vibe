@@ -5,11 +5,13 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ## Build Commands
 
 ```bash
-go build -o vibe ./cmd/vibe/    # Build the CLI
-go run ./cmd/vibe/ <command>    # Run without building
+task build            # Build the CLI
+task run -- <command> # Run without building
+task check            # Run fmt, vet, test
+task install          # Install to $GOPATH/bin
 ```
 
-No tests exist yet. No linter configured.
+Run `task --list` for all available tasks. No tests exist yet. No linter configured.
 
 ## Architecture
 
@@ -17,7 +19,8 @@ Vibe is a Go CLI tool for managing Software Enhancement Proposals (SEPs) in AI-n
 
 ### Package Structure
 
-- `cmd/vibe/` - Cobra CLI commands. Each `sep_*.go` file is a subcommand.
+- `main.go` - Entry point that executes the CLI.
+- `internal/cli/` - Cobra CLI commands. Each `sep_*.go` file is a subcommand. `RootCmd` is exported for use by main.go.
 - `internal/sep/` - Core SEP parsing and manipulation. The `SEP` struct represents a proposal with YAML frontmatter.
 - `internal/templates/` - Embedded templates via Go's `embed` package. Contains SEP templates and Claude Code custom commands.
 
@@ -33,9 +36,9 @@ Vibe is a Go CLI tool for managing Software Enhancement Proposals (SEPs) in AI-n
 
 ### Adding New Commands
 
-1. Create `cmd/vibe/<command>.go`
+1. Create `internal/cli/<command>.go`
 2. Define a `cobra.Command`
-3. Register in `init()` with parent command (e.g., `sepCmd.AddCommand(...)`)
+3. Register in `init()` with parent command (e.g., `sepCmd.AddCommand(...)` or `RootCmd.AddCommand(...)`)
 
 ### SEP Parsing
 
