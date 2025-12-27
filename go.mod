@@ -1,4 +1,4 @@
-module vibe
+module github.com/valiro-ai/vibe
 
 go 1.21
 
